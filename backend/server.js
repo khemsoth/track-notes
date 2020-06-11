@@ -4,10 +4,13 @@ const bodyParser = require('body-parser');
 const axios = require('axios');
 const Sequelize = require('sequelize');
 const cors = require('cors');
-const db = require('./models')
+const db = require('./models');
 const dotenv = require('dotenv');
 
 const PORT = 3000 || process.env.PORT;
+
+require('./Routes/apiRoutes')(app);
+
 
 dotenv.config();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -15,13 +18,12 @@ app.use(express.json());
 app.use(express.static("public"));
 app.use(cors());
 
-
 const sequelize = new Sequelize('track_notes', process.env.DB_USER, process.env.DB_PASS, {
   host: 'localhost',
   dialect: 'mysql'
 });
 
-db.sequelize.sync({force: true})
+db.sequelize.sync({force: false})
 
 sequelize
   .authenticate()
