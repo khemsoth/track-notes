@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const axios = require('axios');
 const Sequelize = require('sequelize');
 const cors = require('cors');
+const db = require('./models')
 const dotenv = require('dotenv');
 
 const PORT = 3000 || process.env.PORT;
@@ -19,6 +20,8 @@ const sequelize = new Sequelize('track_notes', process.env.DB_USER, process.env.
   host: 'localhost',
   dialect: 'mysql'
 });
+
+db.sequelize.sync({force: true})
 
 sequelize
   .authenticate()
