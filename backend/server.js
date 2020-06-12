@@ -9,21 +9,20 @@ const dotenv = require('dotenv');
 
 const PORT = 3000 || process.env.PORT;
 
-require('./Routes/apiRoutes')(app);
-
-
 dotenv.config();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
+app.use(bodyParser.json());
 app.use(cors());
+
+require('./Routes/apiRoutes')(app);
+
 
 const sequelize = new Sequelize('track_notes', process.env.DB_USER, process.env.DB_PASS, {
   host: 'localhost',
   dialect: 'mysql'
 });
-
-db.sequelize.sync({force: false})
 
 sequelize
   .authenticate()
@@ -34,6 +33,7 @@ sequelize
     console.error('Unable to connect to the database:', err);
   });
 
+  db.sequelize.sync({force: false})
 
 
 

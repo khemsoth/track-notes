@@ -25,4 +25,38 @@ module.exports = function(app) {
         res.send(sims);
       });
   });
+
+  //POST ROUTES
+  app.post('/users', (req, res) => {
+    models.User.create({
+      username: req.body.username,
+      password: req.body.password
+    }).then(function(user) {
+      res.send(`New user created: ${user}`)
+    });
+  });
+
+  app.post('/sims', function(req, res) {
+    models.Sim.create({
+      name: req.body.name,
+    }).then(function(sim) {
+      res.send(`Created new sim: ${sim}`);
+    });
+  });
+
+  app.post('/notes', function(req, res) {
+    models.Note.create({
+      sim: req.body.sim,
+      car: req.body.car,
+      track: req.body.track,
+      setupName: req.body.setupName,
+      date: new Date().toLocaleString(),
+      goals: req.body.goals,
+      time: req.body.time,
+      session: req.body.session,
+      notes: req.body.notes
+    }).then(function(sim) {
+      res.send(`Created new sim: ${sim}`);
+    });
+  });
 }
