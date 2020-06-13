@@ -49,7 +49,7 @@ module.exports = function(app) {
       sim: req.body.sim,
       car: req.body.car,
       track: req.body.track,
-      setupName: req.body.setupName,
+      setupName: req.body.setup,
       date: new Date().toLocaleString(),
       goals: req.body.goals,
       time: req.body.time,
