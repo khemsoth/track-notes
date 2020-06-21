@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CreateDetail />
+    <CreateDetail v-on:add-note="addNote" />
 
     <h2>Results: </h2>
 
@@ -33,9 +33,7 @@ export default {
   components: {
     CreateDetail,
   },
-  props: {
-
-  },
+  props: ['noteslist'],
   data() {
     return {
       notes: []
@@ -45,8 +43,32 @@ export default {
     let uri = 'http://localhost:3000/notes';
     axios.get(uri)
       .then(res => {
-        this.notes = res.data;
+        this.notes = res.data
       })
+  },
+  methods: {
+    addNote(newNote) {
+      const {
+        sim, 
+        car, 
+        track, 
+        setup,
+        goals,
+        time, 
+        session,
+        notes,
+      } = newNote
+      axios.post('http://localhost:3000/notes', {
+        sim,
+        car,
+        track,
+        setup,
+        goals,
+        time,
+        session,
+        notes
+      }).then(res => this.notes.push(newNote))
+    }
   }
 
 }

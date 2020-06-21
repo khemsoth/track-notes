@@ -55,8 +55,8 @@ module.exports = function(app) {
       time: req.body.time,
       session: req.body.session,
       notes: req.body.notes
-    }).then(function(sim) {
-      res.send(`Created new sim: ${sim}`);
+    }).then(function(note) {
+      res.send(`Created new note: ${note}`);
     });
   });
 }

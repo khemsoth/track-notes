@@ -1,6 +1,6 @@
 <template>
   <div class="all">
-    <form class="create-detail-form">
+    <form v-on:submit="addNote" class="create-detail-form">
       <div class="detail">
       <label for="sim" class="detail-label">Sim: </label>
         <select v-model="notes.sim" name="sim" class="dropdown">
@@ -40,7 +40,7 @@
         <textarea v-model="notes.notes" name="notes" cols="30" rows="10" placeholder="Results/Fastest lap/Other details"></textarea>
       </div>
 
-      <input type="button" value="Add TrackNote" class="add-btn" v-on:click="addNote">
+      <input type="submit" value="Add New Note" class="add-btn">
     </form>
   </div>
   
@@ -72,7 +72,6 @@ export default {
   },
   created() {
     let uri = 'http://localhost:3000/sims';
-    console.log(this.sims);
     axios.get(uri)
       .then(res =>{
         this.sims = res.data;
@@ -80,10 +79,9 @@ export default {
       })
   },
   methods: {
-    addNote() {
+    addNote(event) {
       event.preventDefault();
-      let uri = 'http://localhost:3000/notes';
-      let note = {
+      const newNote = {
         sim: this.notes.sim,
         car: this.notes.car,
         track: this.notes.track,
@@ -93,18 +91,36 @@ export default {
         session: this.notes.session,
         notes: this.notes.notes
       };
+      this.$emit('add-note', newNote);
+      this.notes.sim = '';
+      this.notes.car = '';
+      this.notes.track = '';
+      this.notes.setup = '';
+      this.notes.goals = '';
+      this.notes.time = '';
+      this.notes.session = '';
+      this.notes.notes = '';
+      /*
       axios.post(uri, note)
         .then(res => {
           console.log('new note saved'); 
-          this.notes.sim = '';
-          this.notes.car = '';
-          this.notes.track = '';
-          this.notes.setup = '';
-          this.notes.goals = '';
-          this.notes.time = '';
-          this.notes.session = '';
-          this.notes.notes = '';
+          this.sims.sim = '';
+          this.sims.car = '';
+          this.sims.track = '';
+          this.sims.setup = '';
+          this.sims.goals = '';
+          this.sims.time = '';
+          this.sims.session = '';
+          this.sims.notes = '';
         });
+        /*
+      let url = 'http://localhost:3000/sims';
+        console.log(this.sims);
+        axios.get(url)
+          .then(res =>{
+            this.sims = res.data;
+            this.sims.sort((a, b) => (a.name > b.name) ? 1 : -1);
+      })*/
     }
   }
 }
