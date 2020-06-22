@@ -1,7 +1,9 @@
-const express = require('express');
-const app = express();
-const axios = require('axios');
-const models = require('../models');
+const express = require('express')
+const app = express()
+const axios = require('axios')
+const models = require('../models')
+const bcrypt = require('bcrypt')
+const saltRounds = 10
 
 module.exports = function(app) {
   //GET ROUTES
