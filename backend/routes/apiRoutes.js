@@ -1,9 +1,11 @@
 const express = require('express')
 const app = express()
+const router = express.Router()
 const axios = require('axios')
 const models = require('../models')
 const bcrypt = require('bcrypt')
 const saltRounds = 10
+const passport = require('passport')
 
 module.exports = function(app) {
   //GET ROUTES
@@ -29,12 +31,16 @@ module.exports = function(app) {
   });
 
   //POST ROUTES
-  app.post('/users', (req, res) => {
+  app.post('/users', async (req, res) => {
+    const hashedPass = await bcrypt.hash(req.body.password, 12)
     models.User.create({
       username: req.body.username,
-      password: req.body.password
-    }).then(function(user) {
-      res.send(`New user created: ${user}`)
+      password: hashedPass,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email
+    }).then(function() {
+      console.log('User created')
     });
   });
 
@@ -61,4 +67,14 @@ module.exports = function(app) {
       res.send(`Created new note: ${note}`);
     });
   });
+
+  app.post('/login', 
+    passport.authenticate('local', 
+      {
+       successRedirect: 'http://localhost:8080/',
+       failureRedirect: 'http://localhost:8080/login',
+       failureFlash: true
+      })
+    )
+
 }

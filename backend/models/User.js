@@ -18,9 +18,6 @@ module.exports = function(sequelize, DataTypes) {
     email: {
       type: DataTypes.STRING,
     },
-    passwordSalt: {
-      type: DataTypes.STRING
-    }
   })
   return User;
   }

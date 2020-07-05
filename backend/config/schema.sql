@@ -1,1 +1,1 @@
-create database if not exists sim_setups;
+create database if not exists track_notes;
