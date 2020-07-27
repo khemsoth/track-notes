@@ -59,7 +59,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 
-require('./Routes/apiRoutes')(app);
+require('./routes/apiRoutes')(app);
 
 
 const sequelize = new Sequelize('track_notes', process.env.DB_USER, process.env.DB_PASS, {
