@@ -2,7 +2,7 @@
   <div>
     Login Page
 
-    <form action="http://localhost:3000/login" method="POST" >
+    <form v-on:submit="login">
     <div>
         <label>Username:</label>
         <input type="text" name="username"/>
@@ -35,16 +35,21 @@ export default {
   },
   methods: {
     login(e) {
-      console.log(this.user.username)
       e.preventDefault()
       const user = {
         username: this.user.username,
         password: this.user.password
       }
-      axios.post('http://localhost:3000/login', {
-        username,
-        password
-      })
+      axios.post('http://localhost:3000/api/login', user)
+        .then((res) => {
+          console.log('Logged in')
+          router.push('/')
+        })
+        .catch((err) => {
+          console.log('Cannot log in')
+        })
+      this.user.username = '',
+      this.user.password = ''
     }
   }
 }

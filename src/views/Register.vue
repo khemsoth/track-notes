@@ -60,7 +60,7 @@ export default {
         email: this.newUser.email
       }
       console.log('new user created')
-      axios.post('http://localhost:3000/users', 
+      axios.post('/api/users', 
         newUser
       ).then((res) => {console.log(res)} ,
         (err) => {console.log(err)})

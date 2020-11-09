@@ -31,7 +31,7 @@ module.exports = function(app) {
   });
 
   //POST ROUTES
-  app.post('/users', async (req, res) => {
+  app.post('/api/users', async (req, res) => {
     const hashedPass = await bcrypt.hash(req.body.password, 12)
     models.User.create({
       username: req.body.username,
@@ -44,7 +44,7 @@ module.exports = function(app) {
     });
   });
 
-  app.post('/sims', function(req, res) {
+  app.post('/api/sims', function(req, res) {
     models.Sim.create({
       name: req.body.name,
     }).then(function(sim) {
@@ -52,7 +52,7 @@ module.exports = function(app) {
     });
   });
 
-  app.post('/notes', function(req, res) {
+  app.post('/api/notes', function(req, res) {
     models.Note.create({
       sim: req.body.sim,
       car: req.body.car,
@@ -68,13 +68,19 @@ module.exports = function(app) {
     });
   });
 
-  app.post('/login', 
+  app.post('/api/login', (req, res, next) => {
     passport.authenticate('local', 
-      {
-       successRedirect: 'http://localhost:8080/',
-       failureRedirect: 'http://localhost:8080/login',
-       failureFlash: true
+      (err, user, info) => {
+        if(err) {
+          return next(err)
+        }
+        if(!user) {
+          return res.status(400).send([user, 'Cannot log in', info])
+        }
+        req.login(user, err => {
+          res.send('Logged in')
+        })
       })
-    )
+  })
 
 }

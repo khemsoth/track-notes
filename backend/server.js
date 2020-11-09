@@ -10,7 +10,7 @@ const db = require('./models');
 const dotenv = require('dotenv');
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
-const flash = require('connect-flash')
+const flash = require('express-flash')
 
 const PORT = 3000 || process.env.PORT;
 
@@ -18,50 +18,33 @@ const models = require('./models')
 
 dotenv.config();
 
-/*
-passport.serializeUser(function(user, done) {
-  done(null, user.id);
-});
-
-passport.deserializeUser(function(id, done) {
-  User.findById(id, function(err, user) {
-    done(err, user);
-  });
-});
-
 passport.use(new LocalStrategy(
   function(username, password, done) {
-    console.log('looking for user')
-    models.User.findOne({
-      where: {
-        username: username
-        }
-      }, function(err, user) {
-      if(err) { return done(err) }
+    models.User.findOne({ username: username })
+    .then(user => {
       if(!user) {
-        return done(null, false, { message: 'Incorrect username' })
+        return done(null, false, { message: 'That user does not exist' })
       }
-      if(!user.validPassword(password)) {
-        return done(null, false, { message: 'Incorrect password' })
-      }
-      return done(null, user)
+      bcrypt.compare(password, user.password, (err, isMatch) => {
+        if(err) throw (err)
+        if(isMatch) {
+          return done(null, user)
+        } else {
+          return done(null, false, { message: 'Password incorrect' })
+        }
+      })
     })
   }
 ))
-*/
+passport.serializeUser(function(user, done) {
+    done(null, user.id);
+  });
 
-app.use(express.static("public"));
-app.use(cookieParser())
-app.use(bodyParser())
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(session({ secret: 'keyboard cat', resave: false, saveUninitialized: false }))
-app.use(express.json());
-app.use(cors());
-
-require('./Routes/apiRoutes')(app);
-
-
+  passport.deserializeUser(function(id, done) {
+    User.findById(id, function(err, user) {
+      done(err, user);
+    })
+  })
 const sequelize = new Sequelize('track_notes', process.env.DB_USER, process.env.DB_PASS, {
   host: 'localhost',
   dialect: 'mysql'
@@ -78,10 +61,28 @@ sequelize
 
   db.sequelize.sync({force: false})
 
+  
 
+//app.use(express.static("public"));
+app.use(cookieParser())
+//app.use(bodyParser())
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(session({ secret: 'keyboard cat', resave: true, saveUninitialized: true }))
+app.use(passport.initialize())
+app.use(passport.session())
+//app.use(express.json());
+app.use(cors())
+app.use(flash())
 
+app.use(function(req, res, next) {
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  res.locals.error = req.flash('error');
+  next();
+});
 
-
+require('./Routes/apiRoutes')(app);
 
 
 app.listen(PORT, () =>{
