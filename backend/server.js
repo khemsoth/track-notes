@@ -5,12 +5,12 @@ const bodyParser = require('body-parser');
 const axios = require('axios');
 const Sequelize = require('sequelize');
 const cors = require('cors');
-const cookieParser = require('cookie-parser')
+//const cookieParser = require('cookie-parser')
 const db = require('./models');
 const dotenv = require('dotenv');
-const passport = require('passport')
-const LocalStrategy = require('passport-local').Strategy
-const flash = require('express-flash')
+//const passport = require('passport')
+//const LocalStrategy = require('passport-local').Strategy
+//const flash = require('connect-flash')
 
 const PORT = 3000 || process.env.PORT;
 
@@ -36,9 +36,21 @@ passport.use(new LocalStrategy(
     })
   }
 ))
+
 passport.serializeUser(function(user, done) {
     done(null, user.id);
   });
+
+app.use(express.static("public"));
+//app.use(cookieParser())
+app.use(bodyParser())
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+//app.use(session({ secret: 'keyboard cat', resave: false, saveUninitialized: false }))
+app.use(express.json());
+app.use(cors());
+
+require('./routes/apiRoutes')(app);
 
   passport.deserializeUser(function(id, done) {
     User.findById(id, function(err, user) {

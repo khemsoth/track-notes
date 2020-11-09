@@ -83,4 +83,14 @@ module.exports = function(app) {
       })
   })
 
+// DELETE ROUTES
+  app.delete('/delete/note/:id', function(req, res) {
+    models.Note.destroy({
+      where: {
+        id: req.params.id
+      }
+    }).then(function(id) {
+      res.send(`Deleted note with id of ${id}`)
+    })
+    })
 }
