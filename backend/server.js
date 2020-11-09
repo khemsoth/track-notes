@@ -5,12 +5,12 @@ const bodyParser = require('body-parser');
 const axios = require('axios');
 const Sequelize = require('sequelize');
 const cors = require('cors');
-//const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser')
 const db = require('./models');
 const dotenv = require('dotenv');
-//const passport = require('passport')
-//const LocalStrategy = require('passport-local').Strategy
-//const flash = require('connect-flash')
+const passport = require('passport')
+const LocalStrategy = require('passport-local').Strategy
+const flash = require('connect-flash')
 
 const PORT = 3000 || process.env.PORT;
 

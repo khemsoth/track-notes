@@ -48,7 +48,6 @@ export default {
   },
   methods: {
     addNote(newNote) {
-      console.log('noteslist')
       const {
         sim, 
         car, 
@@ -59,7 +58,6 @@ export default {
         session,
         notes,
       } = newNote
-      console.log('noteslist prepost')
       axios.post('/api/notes', {
         sim,
         car,
@@ -70,8 +68,6 @@ export default {
         session,
         notes
       }).then(res => this.notes.push(newNote))
-      console.log('noteslist post post')
-      console.log(newNote)
     }
   }
 
