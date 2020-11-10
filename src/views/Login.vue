@@ -2,17 +2,17 @@
   <div>
     Login Page
 
-    <form v-on:submit="login">
+    <form action="/api/login" method="POST">
     <div>
         <label>Username:</label>
-        <input type="text" name="username"/>
+        <input type="email" id="email" name="email"/>
     </div>
     <div>
         <label>Password:</label>
-        <input type="password" name="password"/>
+        <input type="password" id="password" name="password"/>
     </div>
     <div>
-        <input type="submit" value="Log In"/>
+        <button type="submit">Login</button>
     </div>
 </form>
   </div>
@@ -40,16 +40,19 @@ export default {
         username: this.user.username,
         password: this.user.password
       }
-      axios.post('http://localhost:3000/api/login', user)
+      axios.post('/api/login', user)
         .then((res) => {
           console.log('Logged in')
-          router.push('/')
+          this.$router.push(this.$route.query.redirect || '/')
         })
         .catch((err) => {
           console.log('Cannot log in')
         })
       this.user.username = '',
       this.user.password = ''
+    },
+    testLogin() {
+      axios.post('/ap')
     }
   }
 }

@@ -67,21 +67,27 @@ module.exports = function(app) {
       res.send(`Created new note: ${note}`);
     });
   });
-
-  app.post('/api/login', (req, res, next) => {
+/*
+  app.post('/api/login',
     passport.authenticate('local', 
-      (err, user, info) => {
+      (err, user, res, info) => {
         if(err) {
           return next(err)
         }
         if(!user) {
-          return res.status(400).send([user, 'Cannot log in', info])
+          return console.log('no user')
         }
         req.login(user, err => {
           res.send('Logged in')
         })
       })
-  })
+  )
+  //app.post('/api/login', passport.authenticate('local', {
+    /*successRedirect: '/',
+    failureRedirect: '/login',
+    failureFlash: true*/
+    
+  //}))
 
 // DELETE ROUTES
   app.delete('/delete/note/:id', function(req, res) {
